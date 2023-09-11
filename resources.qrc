@@ -1,6 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
-<qresource prefix="/data">
+<qresource>
     <file>data/FLR.bin</file>
     <file>data/KT17MP.bin</file>
     <file>data/mercurysurface.bin</file>
