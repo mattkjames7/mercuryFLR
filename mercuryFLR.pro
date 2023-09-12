@@ -4,6 +4,8 @@ QT = core gui widgets
 
 SOURCES += \
     src/cutout.cc \
+    src/flatarrow.cc \
+    src/flr.cc \
     src/initbuffers.cc \
     src/initgl.cc \
     src/magnetopause.cc \
@@ -15,6 +17,8 @@ SOURCES += \
 
 HEADERS += \
     include/cutout.h \
+    include/flatarrow.h \
+    include/flr.h \
     include/initbuffers.h \
     include/initgl.h \
     include/magnetopause.h \

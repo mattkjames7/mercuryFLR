@@ -3,6 +3,7 @@
 #include "include/magnetopause.h"
 #include "include/streamline.h"
 #include "include/cutout.h"
+#include "include/flr.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]) {
     Magnetopause magnetopause;
     Streamline streamline;
     CutOut cutout;
+    FLR flr;
 
     return app.exec();
 }

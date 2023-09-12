@@ -3,6 +3,7 @@ TARGET = mercuryFLR
 QT = core gui widgets
 
 SOURCES += \
+    src/cutout.cc \
     src/initbuffers.cc \
     src/initgl.cc \
     src/magnetopause.cc \
@@ -13,6 +14,7 @@ SOURCES += \
     src/wiggle.cc \
 
 HEADERS += \
+    include/cutout.h \
     include/initbuffers.h \
     include/initgl.h \
     include/magnetopause.h \
