@@ -58,6 +58,7 @@ SOURCES       = src/initbuffers.cc \
 		src/main.cc \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
+		src/streamline.cc \
 		src/wiggle.cc qrc_resources.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = initbuffers.o \
@@ -66,6 +67,7 @@ OBJECTS       = initbuffers.o \
 		main.o \
 		mainwindow.o \
 		mercurysurface.o \
+		streamline.o \
 		wiggle.o \
 		qrc_resources.o \
 		moc_mainwindow.o
@@ -151,6 +153,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		include/magnetopause.h \
 		include/mainwindow.h \
 		include/mercurysurface.h \
+		include/streamline.h \
 		include/ui_mainwindow.h \
 		include/wiggle.h src/initbuffers.cc \
 		src/initgl.cc \
@@ -158,6 +161,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/main.cc \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
+		src/streamline.cc \
 		src/wiggle.cc
 QMAKE_TARGET  = mercuryFLR
 DESTDIR       = 
@@ -345,8 +349,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/wiggle.cc $(DISTDIR)/
+	$(COPY_FILE) --parents include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -420,15 +424,19 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 initbuffers.o: src/initbuffers.cc include/initbuffers.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initbuffers.o src/initbuffers.cc
 
-initgl.o: src/initgl.cc 
+initgl.o: src/initgl.cc include/initgl.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initgl.o src/initgl.cc
 
-magnetopause.o: src/magnetopause.cc 
+magnetopause.o: src/magnetopause.cc include/magnetopause.h \
+		include/initbuffers.h \
+		include/wiggle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o magnetopause.o src/magnetopause.cc
 
 main.o: src/main.cc include/mainwindow.h \
 		include/mercurysurface.h \
-		include/initbuffers.h
+		include/initbuffers.h \
+		include/magnetopause.h \
+		include/wiggle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cc
 
 mainwindow.o: src/mainwindow.cc include/mainwindow.h \
@@ -438,6 +446,9 @@ mainwindow.o: src/mainwindow.cc include/mainwindow.h \
 mercurysurface.o: src/mercurysurface.cc include/mercurysurface.h \
 		include/initbuffers.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mercurysurface.o src/mercurysurface.cc
+
+streamline.o: src/streamline.cc include/streamline.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o streamline.o src/streamline.cc
 
 wiggle.o: src/wiggle.cc include/wiggle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wiggle.o src/wiggle.cc
