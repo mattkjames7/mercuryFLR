@@ -61,6 +61,7 @@ SOURCES       = src/cutout.cc \
 		src/main.cc \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
+		src/ocb.cc \
 		src/streamline.cc \
 		src/wiggle.cc qrc_resources.cpp \
 		moc_mainwindow.cpp
@@ -73,6 +74,7 @@ OBJECTS       = cutout.o \
 		main.o \
 		mainwindow.o \
 		mercurysurface.o \
+		ocb.o \
 		streamline.o \
 		wiggle.o \
 		qrc_resources.o \
@@ -162,6 +164,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		include/magnetopause.h \
 		include/mainwindow.h \
 		include/mercurysurface.h \
+		include/ocb.h \
 		include/streamline.h \
 		include/ui_mainwindow.h \
 		include/wiggle.h src/cutout.cc \
@@ -173,6 +176,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/main.cc \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
+		src/ocb.cc \
 		src/streamline.cc \
 		src/wiggle.cc
 QMAKE_TARGET  = mercuryFLR
@@ -361,8 +365,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/cutout.h include/flatarrow.h include/flr.h include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/cutout.cc src/flatarrow.cc src/flr.cc src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
+	$(COPY_FILE) --parents include/cutout.h include/flatarrow.h include/flr.h include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/ocb.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/cutout.cc src/flatarrow.cc src/flr.cc src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/ocb.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -392,7 +396,7 @@ compiler_rcc_clean:
 	-$(DEL_FILE) qrc_resources.cpp
 qrc_resources.cpp: resources.qrc \
 		/usr/lib/qt5/bin/rcc \
-		data/OCB.bin \
+		data/ocb.bin \
 		data/mercurysurface.bin \
 		data/kt17mp.bin \
 		data/flr.bin
@@ -441,7 +445,7 @@ cutout.o: src/cutout.cc include/cutout.h \
 flatarrow.o: src/flatarrow.cc include/flatarrow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o flatarrow.o src/flatarrow.cc
 
-flr.o: src/flr.cc 
+flr.o: src/flr.cc include/flr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o flr.o src/flr.cc
 
 initbuffers.o: src/initbuffers.cc include/initbuffers.h
@@ -462,7 +466,8 @@ main.o: src/main.cc include/mainwindow.h \
 		include/wiggle.h \
 		include/streamline.h \
 		include/cutout.h \
-		include/flr.h
+		include/flr.h \
+		include/ocb.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cc
 
 mainwindow.o: src/mainwindow.cc include/mainwindow.h \
@@ -472,6 +477,9 @@ mainwindow.o: src/mainwindow.cc include/mainwindow.h \
 mercurysurface.o: src/mercurysurface.cc include/mercurysurface.h \
 		include/initbuffers.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mercurysurface.o src/mercurysurface.cc
+
+ocb.o: src/ocb.cc include/ocb.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ocb.o src/ocb.cc
 
 streamline.o: src/streamline.cc include/streamline.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o streamline.o src/streamline.cc

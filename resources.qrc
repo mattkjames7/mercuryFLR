@@ -4,6 +4,6 @@
     <file>data/flr.bin</file>
     <file>data/kt17mp.bin</file>
     <file>data/mercurysurface.bin</file>
-    <file>data/OCB.bin</file>
+    <file>data/ocb.bin</file>
 </qresource>
 </RCC>

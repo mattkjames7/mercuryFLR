@@ -4,6 +4,7 @@
 #include "include/streamline.h"
 #include "include/cutout.h"
 #include "include/flr.h"
+#include "include/ocb.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[]) {
     Streamline streamline;
     CutOut cutout;
     FLR flr;
+    OCB ocb;
 
     return app.exec();
 }
