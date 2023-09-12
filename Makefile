@@ -52,15 +52,21 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = src/main.cc \
+SOURCES       = src/initbuffers.cc \
+		src/initgl.cc \
+		src/magnetopause.cc \
+		src/main.cc \
 		src/mainwindow.cc \
-		src/initbuffers.cc \
-		src/mercurysurface.cc qrc_resources.cpp \
+		src/mercurysurface.cc \
+		src/wiggle.cc qrc_resources.cpp \
 		moc_mainwindow.cpp
-OBJECTS       = main.o \
+OBJECTS       = initbuffers.o \
+		initgl.o \
+		magnetopause.o \
+		main.o \
 		mainwindow.o \
-		initbuffers.o \
 		mercurysurface.o \
+		wiggle.o \
 		qrc_resources.o \
 		moc_mainwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -140,12 +146,19 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		mercuryFLR.pro include/mainwindow.h \
-		include/initbuffers.h \
-		include/mercurysurface.h src/main.cc \
+		mercuryFLR.pro include/initbuffers.h \
+		include/initgl.h \
+		include/magnetopause.h \
+		include/mainwindow.h \
+		include/mercurysurface.h \
+		include/ui_mainwindow.h \
+		include/wiggle.h src/initbuffers.cc \
+		src/initgl.cc \
+		src/magnetopause.cc \
+		src/main.cc \
 		src/mainwindow.cc \
-		src/initbuffers.cc \
-		src/mercurysurface.cc
+		src/mercurysurface.cc \
+		src/wiggle.cc
 QMAKE_TARGET  = mercuryFLR
 DESTDIR       = 
 TARGET        = mercuryFLR
@@ -332,8 +345,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/mainwindow.h include/initbuffers.h include/mercurysurface.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cc src/mainwindow.cc src/initbuffers.cc src/mercurysurface.cc $(DISTDIR)/
+	$(COPY_FILE) --parents include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/wiggle.cc $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -404,6 +417,15 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 
 ####### Compile
 
+initbuffers.o: src/initbuffers.cc include/initbuffers.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initbuffers.o src/initbuffers.cc
+
+initgl.o: src/initgl.cc 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initgl.o src/initgl.cc
+
+magnetopause.o: src/magnetopause.cc 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o magnetopause.o src/magnetopause.cc
+
 main.o: src/main.cc include/mainwindow.h \
 		include/mercurysurface.h \
 		include/initbuffers.h
@@ -413,12 +435,12 @@ mainwindow.o: src/mainwindow.cc include/mainwindow.h \
 		include/ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o src/mainwindow.cc
 
-initbuffers.o: src/initbuffers.cc include/initbuffers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initbuffers.o src/initbuffers.cc
-
 mercurysurface.o: src/mercurysurface.cc include/mercurysurface.h \
 		include/initbuffers.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mercurysurface.o src/mercurysurface.cc
+
+wiggle.o: src/wiggle.cc include/wiggle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wiggle.o src/wiggle.cc
 
 qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp
