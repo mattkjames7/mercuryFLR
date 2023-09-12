@@ -20,7 +20,7 @@ MercurySurface::~MercurySurface() {
 /*this will read a binary file containing the RGB values for Mercury's surface*/
 void MercurySurface::readBinary(){
 	std::cout << "Reading Mercury Surface Image" << std::endl;
-	Q_INIT_RESOURCE(resources);
+	
 
 	QFile file(":/data/mercurysurface.bin");
 	if (!file.open(QIODevice::ReadOnly)) {

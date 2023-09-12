@@ -2,7 +2,7 @@
 <RCC version="1.0">
 <qresource>
     <file>data/FLR.bin</file>
-    <file>data/KT17MP.bin</file>
+    <file>data/kt17mp.bin</file>
     <file>data/mercurysurface.bin</file>
     <file>data/OCB.bin</file>
 </qresource>

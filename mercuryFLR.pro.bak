@@ -9,6 +9,7 @@ SOURCES += \
     src/main.cc \
     src/mainwindow.cc \
     src/mercurysurface.cc \
+    src/streamline.cc \
     src/wiggle.cc \
 
 HEADERS += \
@@ -17,6 +18,7 @@ HEADERS += \
     include/magnetopause.h \
     include/mainwindow.h \
     include/mercurysurface.h \
+    include/streamline.h \
     include/ui_mainwindow.h \
     include/wiggle.h \
 

@@ -52,7 +52,8 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = src/initbuffers.cc \
+SOURCES       = src/cutout.cc \
+		src/initbuffers.cc \
 		src/initgl.cc \
 		src/magnetopause.cc \
 		src/main.cc \
@@ -61,7 +62,8 @@ SOURCES       = src/initbuffers.cc \
 		src/streamline.cc \
 		src/wiggle.cc qrc_resources.cpp \
 		moc_mainwindow.cpp
-OBJECTS       = initbuffers.o \
+OBJECTS       = cutout.o \
+		initbuffers.o \
 		initgl.o \
 		magnetopause.o \
 		main.o \
@@ -148,14 +150,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		mercuryFLR.pro include/initbuffers.h \
+		mercuryFLR.pro include/cutout.h \
+		include/initbuffers.h \
 		include/initgl.h \
 		include/magnetopause.h \
 		include/mainwindow.h \
 		include/mercurysurface.h \
 		include/streamline.h \
 		include/ui_mainwindow.h \
-		include/wiggle.h src/initbuffers.cc \
+		include/wiggle.h src/cutout.cc \
+		src/initbuffers.cc \
 		src/initgl.cc \
 		src/magnetopause.cc \
 		src/main.cc \
@@ -349,8 +353,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
+	$(COPY_FILE) --parents include/cutout.h include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/cutout.cc src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -383,7 +387,7 @@ qrc_resources.cpp: resources.qrc \
 		data/FLR.bin \
 		data/OCB.bin \
 		data/mercurysurface.bin \
-		data/KT17MP.bin
+		data/kt17mp.bin
 	/usr/lib/qt5/bin/rcc -name resources resources.qrc -o qrc_resources.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h
@@ -421,6 +425,9 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 
 ####### Compile
 
+cutout.o: src/cutout.cc 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cutout.o src/cutout.cc
+
 initbuffers.o: src/initbuffers.cc include/initbuffers.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o initbuffers.o src/initbuffers.cc
 
@@ -436,7 +443,9 @@ main.o: src/main.cc include/mainwindow.h \
 		include/mercurysurface.h \
 		include/initbuffers.h \
 		include/magnetopause.h \
-		include/wiggle.h
+		include/wiggle.h \
+		include/streamline.h \
+		include/cutout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cc
 
 mainwindow.o: src/mainwindow.cc include/mainwindow.h \
