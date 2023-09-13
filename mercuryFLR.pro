@@ -13,6 +13,7 @@ SOURCES += \
     src/mainwindow.cc \
     src/mercurysurface.cc \
     src/ocb.cc \
+    src/openglwidget.cc \
     src/streamline.cc \
     src/wiggle.cc \
 
@@ -26,6 +27,7 @@ HEADERS += \
     include/mainwindow.h \
     include/mercurysurface.h \
     include/ocb.h \
+    include/openglwidget.h \
     include/streamline.h \
     include/ui_mainwindow.h \
     include/wiggle.h \

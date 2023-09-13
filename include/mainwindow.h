@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "include/openglwidget.h"
+#include <QVBoxLayout>
+
 
 namespace Ui {
     class MainWindow;
@@ -19,6 +22,9 @@ class MainWindow : public QMainWindow {
 
     private:
         Ui::MainWindow *ui;
+        QVBoxLayout *layout;
+        OpenGLWidget *openGLWidget;
+        QWidget *centralWidget;
 };
 
 #endif // MAINWINDOW_H

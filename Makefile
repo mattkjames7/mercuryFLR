@@ -62,9 +62,11 @@ SOURCES       = src/cutout.cc \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
 		src/ocb.cc \
+		src/openglwidget.cc \
 		src/streamline.cc \
 		src/wiggle.cc qrc_resources.cpp \
-		moc_mainwindow.cpp
+		moc_mainwindow.cpp \
+		moc_openglwidget.cpp
 OBJECTS       = cutout.o \
 		flatarrow.o \
 		flr.o \
@@ -75,10 +77,12 @@ OBJECTS       = cutout.o \
 		mainwindow.o \
 		mercurysurface.o \
 		ocb.o \
+		openglwidget.o \
 		streamline.o \
 		wiggle.o \
 		qrc_resources.o \
-		moc_mainwindow.o
+		moc_mainwindow.o \
+		moc_openglwidget.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -165,6 +169,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		include/mainwindow.h \
 		include/mercurysurface.h \
 		include/ocb.h \
+		include/openglwidget.h \
 		include/streamline.h \
 		include/ui_mainwindow.h \
 		include/wiggle.h src/cutout.cc \
@@ -177,6 +182,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/mainwindow.cc \
 		src/mercurysurface.cc \
 		src/ocb.cc \
+		src/openglwidget.cc \
 		src/streamline.cc \
 		src/wiggle.cc
 QMAKE_TARGET  = mercuryFLR
@@ -365,8 +371,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/cutout.h include/flatarrow.h include/flr.h include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/ocb.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/cutout.cc src/flatarrow.cc src/flr.cc src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/ocb.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
+	$(COPY_FILE) --parents include/cutout.h include/flatarrow.h include/flr.h include/initbuffers.h include/initgl.h include/magnetopause.h include/mainwindow.h include/mercurysurface.h include/ocb.h include/openglwidget.h include/streamline.h include/ui_mainwindow.h include/wiggle.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/cutout.cc src/flatarrow.cc src/flr.cc src/initbuffers.cc src/initgl.cc src/magnetopause.cc src/main.cc src/mainwindow.cc src/mercurysurface.cc src/ocb.cc src/openglwidget.cc src/streamline.cc src/wiggle.cc $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -408,13 +414,35 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_openglwidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_openglwidget.cpp
 moc_mainwindow.cpp: include/mainwindow.h \
+		include/openglwidget.h \
+		include/mercurysurface.h \
+		include/initbuffers.h \
+		include/magnetopause.h \
+		include/wiggle.h \
+		include/streamline.h \
+		include/cutout.h \
+		include/flr.h \
+		include/ocb.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/data2/github/mercuryFLR/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/media/data2/github/mercuryFLR -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/mainwindow.h -o moc_mainwindow.cpp
+
+moc_openglwidget.cpp: include/openglwidget.h \
+		include/mercurysurface.h \
+		include/initbuffers.h \
+		include/magnetopause.h \
+		include/wiggle.h \
+		include/streamline.h \
+		include/cutout.h \
+		include/flr.h \
+		include/ocb.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/data2/github/mercuryFLR/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/media/data2/github/mercuryFLR -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/openglwidget.h -o moc_openglwidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -460,6 +488,7 @@ magnetopause.o: src/magnetopause.cc include/magnetopause.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o magnetopause.o src/magnetopause.cc
 
 main.o: src/main.cc include/mainwindow.h \
+		include/openglwidget.h \
 		include/mercurysurface.h \
 		include/initbuffers.h \
 		include/magnetopause.h \
@@ -471,6 +500,15 @@ main.o: src/main.cc include/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cc
 
 mainwindow.o: src/mainwindow.cc include/mainwindow.h \
+		include/openglwidget.h \
+		include/mercurysurface.h \
+		include/initbuffers.h \
+		include/magnetopause.h \
+		include/wiggle.h \
+		include/streamline.h \
+		include/cutout.h \
+		include/flr.h \
+		include/ocb.h \
 		include/ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o src/mainwindow.cc
 
@@ -480,6 +518,17 @@ mercurysurface.o: src/mercurysurface.cc include/mercurysurface.h \
 
 ocb.o: src/ocb.cc include/ocb.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ocb.o src/ocb.cc
+
+openglwidget.o: src/openglwidget.cc include/openglwidget.h \
+		include/mercurysurface.h \
+		include/initbuffers.h \
+		include/magnetopause.h \
+		include/wiggle.h \
+		include/streamline.h \
+		include/cutout.h \
+		include/flr.h \
+		include/ocb.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglwidget.o src/openglwidget.cc
 
 streamline.o: src/streamline.cc include/streamline.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o streamline.o src/streamline.cc
@@ -492,6 +541,9 @@ qrc_resources.o: qrc_resources.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_openglwidget.o: moc_openglwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_openglwidget.o moc_openglwidget.cpp
 
 ####### Install
 
