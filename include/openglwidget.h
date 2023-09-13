@@ -9,6 +9,8 @@
 #include "include/cutout.h"
 #include "include/flr.h"
 #include "include/ocb.h"
+#include "include/initgl.h"
+#include "include/vec.h"
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {

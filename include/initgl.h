@@ -9,5 +9,5 @@
 #include <GL/glext.h>
 #include <iostream>
 
-bool initgl(float *light_position, float *spec, float *shine, float *amb, float *bright);
+bool initGL(float *light_position, float *spec, float *shine, float *amb, float *bright);
 #endif
