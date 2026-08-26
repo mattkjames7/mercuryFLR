@@ -4,15 +4,18 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow) {
+    ui(new Ui::MainWindow),
+    layout(nullptr),
+    openGLWidget(nullptr),
+    centralWidget(nullptr) {
     ui->setupUi(this);
 
-    OpenGLWidget *openGLWidget = new OpenGLWidget(this);
+    openGLWidget = new OpenGLWidget(this);
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    layout = new QVBoxLayout;
     layout->addWidget(openGLWidget);
 
-    QWidget *centralWidget = new QWidget(this);
+    centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
     layout->setMargin(0);
@@ -22,9 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete openGLWidget;
-    delete centralWidget;
-    delete layout;
 }
 
 void MainWindow::on_pushButton_clicked() {
