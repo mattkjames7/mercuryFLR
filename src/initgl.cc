@@ -41,7 +41,10 @@ bool initGL(float *light_position, float *spec, float *shine, float *amb, float 
 	glEnable(GL_POLYGON_SMOOTH);
 	//glBlendFunc(GL_SRC_ALPHA_SATURATE,GL_ZERO);
 	glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// QOpenGLWidget composites its framebuffer into the Qt window. Preserve an
+	// opaque destination alpha while blending scene RGB, otherwise translucent
+	// geometry makes the entire widget reveal windows behind it.
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 	
     return true;
 }
