@@ -1,5 +1,5 @@
 # mercuryFLR
-OpenGL/Qt5 app to create simple visualisation of FLRs in Mercury's magnetosphere.
+OpenGL/Qt5 app to create simple visualisation of FLRs in Mercury's magnetosphere. An adaptation of some old code that I used to use to build visualizations for Mercury-related docs, papers, etc.
 
 ## Host dependencies
 
@@ -54,3 +54,5 @@ cmake --build build -- -j$(nproc)
 ```sh
 ./build/mercuryFLR
 ```
+
+![](example.png)
