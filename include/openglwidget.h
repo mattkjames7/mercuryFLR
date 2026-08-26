@@ -11,6 +11,7 @@
 #include "include/ocb.h"
 #include "include/initgl.h"
 #include "include/vec.h"
+#include "src/legacy/ExampleTraces.h"
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -31,6 +32,7 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         CutOut *cutout;
         FLR *flr;
         OCB *ocb;
+        ExampleTraces *exampleTraces;
 };
 
 #endif

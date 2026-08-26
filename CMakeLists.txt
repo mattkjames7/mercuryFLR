@@ -22,6 +22,10 @@ add_executable(mercuryFLR
     src/cutout.cc
     src/flatarrow.cc
     src/flr.cc
+    src/legacy/ExampleTraces.cpp
+    src/legacy/TraceWrapper.cpp
+    src/legacy/kt17.cc
+    src/legacy/kt17trace.cc
     src/initbuffers.cc
     src/initgl.cc
     src/magnetopause.cc
@@ -41,6 +45,7 @@ add_executable(mercuryFLR
 target_include_directories(mercuryFLR
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/legacy
         ${CMAKE_CURRENT_BINARY_DIR}
         ${FLTK_INCLUDE_DIR}
 )
@@ -51,6 +56,7 @@ target_link_libraries(mercuryFLR
         Qt5::Gui
         Qt5::Widgets
         OpenGL::GL
+        OpenGL::GLU
         GLUT::GLUT
         ${FLTK_LIBRARIES}
         PkgConfig::CAIRO
