@@ -1,6 +1,8 @@
 TEMPLATE = app
 TARGET = mercuryFLR
 QT = core gui widgets
+CONFIG += link_pkgconfig
+PKGCONFIG += cairo
 
 SOURCES += \
     src/cutout.cc \
