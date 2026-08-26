@@ -36,10 +36,7 @@ void FLR::readFLR() {
 	stream.setByteOrder(QDataStream::LittleEndian);
 
 	stream >> this->n_;
-	int i;
-	for (i=0;i<3;i++) {
-		stream >> this->f_[i];
-	}
+	stream.readRawData(reinterpret_cast<char*>(this->f_), sizeof(float) * 3);
 
 	//create arrays
 	this->x_ = new float[this->n_];

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "include/openglwidget.h"
-#include <QVBoxLayout>
+#include <QGridLayout>
 
 
 namespace Ui {
@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
 
     private:
         Ui::MainWindow *ui;
-        QVBoxLayout *layout;
+        QGridLayout *layout;
         OpenGLWidget *openGLWidget;
         QWidget *centralWidget;
 };

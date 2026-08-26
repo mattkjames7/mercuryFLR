@@ -46,13 +46,10 @@ void CutOut::readMPFile() {
 	QDataStream stream(&file);
 	stream.setByteOrder(QDataStream::LittleEndian);
 
-	int i;
-	for (i=0;i<643;i++) {
-		stream >> this->mpx_[i];
-	} 
-	for (i=0;i<643;i++) {
-		stream >> this->mpr_[i];
-	} 
+	stream.readRawData(reinterpret_cast<char*>(this->mpx_),
+	                   sizeof(float) * 643);
+	stream.readRawData(reinterpret_cast<char*>(this->mpr_),
+	                   sizeof(float) * 643);
 
 	file.close();
 }

@@ -22,7 +22,7 @@ Magnetopause::~Magnetopause() {
 
 std::tuple<float,float> Magnetopause::getCoordsxrho(float theta) {
 
-	float r = this->rsm_*sqrt(2.0/1.0 + cos(theta));
+	float r = this->rsm_*sqrt(2.0/(1.0 + cos(theta)));
 	float x = r*cos(theta);
 	float rho = r*sin(theta);
 
@@ -140,5 +140,4 @@ void Magnetopause::populateBuffers(){
 		this->normal_
 	);
 }
-
 
