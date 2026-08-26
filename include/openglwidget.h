@@ -21,6 +21,15 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         OpenGLWidget(QWidget *parent = nullptr);
         ~OpenGLWidget();
 
+    public slots:
+        void observerUp();
+        void observerDown();
+        void observerLeft();
+        void observerRight();
+        void observerZoomIn();
+        void observerZoomOut();
+        void resetObserver();
+
     protected:
         void initializeGL() override; 
         void paintGL() override;       
@@ -33,6 +42,9 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         FLR *flr;
         OCB *ocb;
         ExampleTraces *exampleTraces;
+        float eyeLatitude;
+        float eyeMlt;
+        float eyeDistance;
 };
 
 #endif

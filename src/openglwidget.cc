@@ -9,8 +9,63 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
       cutout(nullptr),
       flr(nullptr),
       ocb(nullptr),
-      exampleTraces(nullptr)
+      exampleTraces(nullptr),
+      eyeLatitude(30.0f),
+      eyeMlt(15.0f),
+      eyeDistance(6.0f)
 {
+}
+
+void OpenGLWidget::observerUp()
+{
+    if (eyeLatitude < 85.0f)
+        eyeLatitude += 5.0f;
+    update();
+}
+
+void OpenGLWidget::observerDown()
+{
+    if (eyeLatitude > -85.0f)
+        eyeLatitude -= 5.0f;
+    update();
+}
+
+void OpenGLWidget::observerLeft()
+{
+    eyeMlt -= 1.0f;
+    if (eyeMlt < 0.0f)
+        eyeMlt += 24.0f;
+    update();
+}
+
+void OpenGLWidget::observerRight()
+{
+    eyeMlt += 1.0f;
+    if (eyeMlt >= 24.0f)
+        eyeMlt -= 24.0f;
+    update();
+}
+
+void OpenGLWidget::observerZoomIn()
+{
+    if (eyeDistance > 2.0f)
+        eyeDistance -= 0.5f;
+    update();
+}
+
+void OpenGLWidget::observerZoomOut()
+{
+    if (eyeDistance < 50.0f)
+        eyeDistance += 0.5f;
+    update();
+}
+
+void OpenGLWidget::resetObserver()
+{
+    eyeLatitude = 30.0f;
+    eyeMlt = 15.0f;
+    eyeDistance = 6.0f;
+    update();
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -53,9 +108,6 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Match the original SDL renderer's initial spherical camera exactly.
-    const float eyeLatitude = 30.0f;
-    const float eyeMlt = 15.0f;
-    const float eyeDistance = 6.0f;
     const float latitude = eyeLatitude * M_PI / 180.0f;
     const float longitude = (eyeMlt + 12.0f) * 15.0f * M_PI / 180.0f;
     const float eyeX = eyeDistance * cosf(latitude) * cosf(longitude);
