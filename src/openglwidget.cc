@@ -1,6 +1,10 @@
 #include "include/openglwidget.h"
 #include "include/flatarrow.h"
 
+#include <QDir>
+#include <QFileInfo>
+#include <QImage>
+
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       mercury(nullptr),
@@ -12,7 +16,14 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
       exampleTraces(nullptr),
       eyeLatitude(30.0f),
       eyeMlt(15.0f),
-      eyeDistance(6.0f)
+      eyeDistance(6.0f),
+      showMagnetopause(true),
+      showCutout(true),
+      showFieldLines(true),
+      showOcb(true),
+      showFlr(true),
+      showStreamlines(true),
+      showWaves(true)
 {
 }
 
@@ -67,6 +78,34 @@ void OpenGLWidget::resetObserver()
     eyeDistance = 6.0f;
     update();
 }
+
+void OpenGLWidget::saveScreenshot()
+{
+    QDir directory;
+    if (!directory.mkpath(QStringLiteral("Screenshots"))) {
+        emit statusMessage(QStringLiteral("Could not create Screenshots directory"));
+        return;
+    }
+
+    int index = 0;
+    QString path;
+    do {
+        path = QStringLiteral("Screenshots/Mercury-Screenshot-%1.bmp").arg(index++);
+    } while (QFileInfo::exists(path));
+
+    if (grabFramebuffer().save(path))
+        emit statusMessage(QStringLiteral("Saved %1").arg(path));
+    else
+        emit statusMessage(QStringLiteral("Could not save %1").arg(path));
+}
+
+void OpenGLWidget::setShowMagnetopause(bool visible) { showMagnetopause = visible; update(); }
+void OpenGLWidget::setShowCutout(bool visible) { showCutout = visible; update(); }
+void OpenGLWidget::setShowFieldLines(bool visible) { showFieldLines = visible; update(); }
+void OpenGLWidget::setShowOcb(bool visible) { showOcb = visible; update(); }
+void OpenGLWidget::setShowFlr(bool visible) { showFlr = visible; update(); }
+void OpenGLWidget::setShowStreamlines(bool visible) { showStreamlines = visible; update(); }
+void OpenGLWidget::setShowWaves(bool visible) { showWaves = visible; update(); }
 
 OpenGLWidget::~OpenGLWidget()
 {
@@ -140,45 +179,50 @@ void OpenGLWidget::paintGL()
     glDisableClientState(GL_COLOR_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // OCBs, matching the original blue segmented lines.
     glDisable(GL_LIGHTING);
-    glLineWidth(5.0f);
-    glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < ocb->n_; ++i) {
-        glVertex3f(ocb->xn_[i], ocb->yn_[i], ocb->zn_[i]);
-        glVertex3f(ocb->xn_[i + 1], ocb->yn_[i + 1], ocb->zn_[i + 1]);
-        glVertex3f(ocb->xs_[i], ocb->ys_[i], ocb->zs_[i]);
-        glVertex3f(ocb->xs_[i + 1], ocb->ys_[i + 1], ocb->zs_[i + 1]);
-    }
-    glEnd();
-
-    // KT17 example field traces: open traces are black and closed traces green.
-    glLineWidth(3.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < exampleTraces->nt; ++i) {
-        for (int j = 0; j < exampleTraces->nstep[i] - 1; ++j) {
-            const int p = i * exampleTraces->MaxTraceSteps + j;
-            const float radius = sqrtf(exampleTraces->xt[p] * exampleTraces->xt[p]
-                                     + exampleTraces->yt[p] * exampleTraces->yt[p]
-                                     + (exampleTraces->zt[p] + 0.196f)
-                                       * (exampleTraces->zt[p] + 0.196f));
-            const float opacity = expf(1.0f - radius);
-            if (exampleTraces->open[i])
-                glColor4f(0.0f, 0.0f, 0.0f, opacity);
-            else
-                glColor4f(0.0f, 0.75f, 0.0f, opacity);
-            glVertex3f(exampleTraces->xt[p], exampleTraces->yt[p], exampleTraces->zt[p]);
-            glVertex3f(exampleTraces->xt[p + 1], exampleTraces->yt[p + 1],
-                       exampleTraces->zt[p + 1]);
+    if (showOcb) {
+        // OCBs, matching the original blue segmented lines.
+        glLineWidth(5.0f);
+        glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < ocb->n_; ++i) {
+            glVertex3f(ocb->xn_[i], ocb->yn_[i], ocb->zn_[i]);
+            glVertex3f(ocb->xn_[i + 1], ocb->yn_[i + 1], ocb->zn_[i + 1]);
+            glVertex3f(ocb->xs_[i], ocb->ys_[i], ocb->zs_[i]);
+            glVertex3f(ocb->xs_[i + 1], ocb->ys_[i + 1], ocb->zs_[i + 1]);
         }
+        glEnd();
     }
-    glEnd();
 
-    // Red outlines of the two cut planes and their centre line.
-    glLineWidth(3.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < 642; ++i) {
+    if (showFieldLines) {
+        // KT17 example field traces: open traces are black and closed traces green.
+        glLineWidth(3.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < exampleTraces->nt; ++i) {
+            for (int j = 0; j < exampleTraces->nstep[i] - 1; ++j) {
+                const int p = i * exampleTraces->MaxTraceSteps + j;
+                const float radius = sqrtf(exampleTraces->xt[p] * exampleTraces->xt[p]
+                                         + exampleTraces->yt[p] * exampleTraces->yt[p]
+                                         + (exampleTraces->zt[p] + 0.196f)
+                                           * (exampleTraces->zt[p] + 0.196f));
+                const float opacity = expf(1.0f - radius);
+                if (exampleTraces->open[i])
+                    glColor4f(0.0f, 0.0f, 0.0f, opacity);
+                else
+                    glColor4f(0.0f, 0.75f, 0.0f, opacity);
+                glVertex3f(exampleTraces->xt[p], exampleTraces->yt[p], exampleTraces->zt[p]);
+                glVertex3f(exampleTraces->xt[p + 1], exampleTraces->yt[p + 1],
+                           exampleTraces->zt[p + 1]);
+            }
+        }
+        glEnd();
+    }
+
+    if (showCutout) {
+        // Red outlines of the two cut planes and their centre line.
+        glLineWidth(3.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < 642; ++i) {
         const float dr = cutout->mpx_[i] - 1.42f;
         float opacity = 0.0f;
         if (dr >= -2.0f)
@@ -201,32 +245,36 @@ void OpenGLWidget::paintGL()
 
         glVertex3f(cutout->mpx_[i], 0.01f, 0.01f);
         glVertex3f(cutout->mpx_[i + 1], 0.01f, 0.01f);
+        }
+        glEnd();
     }
-    glEnd();
 
-    // Original and displaced FLR field lines.
-    glColor3f(0.0f, 0.9f, 0.0f);
-    glLineWidth(3.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < flr->n_ - 1; ++i) {
-        glVertex3f(flr->xd_[i], flr->yd_[i], flr->zd_[i]);
-        glVertex3f(flr->xd_[i + 1], flr->yd_[i + 1], flr->zd_[i + 1]);
-    }
-    glEnd();
-    glLineWidth(2.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < flr->n_ - 1; ++i) {
+    if (showFlr) {
+        // Original and displaced FLR field lines.
+        glColor3f(0.0f, 0.9f, 0.0f);
+        glLineWidth(3.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < flr->n_ - 1; ++i) {
+            glVertex3f(flr->xd_[i], flr->yd_[i], flr->zd_[i]);
+            glVertex3f(flr->xd_[i + 1], flr->yd_[i + 1], flr->zd_[i + 1]);
+        }
+        glEnd();
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < flr->n_ - 1; ++i) {
         // The undisplaced dawn-side trace is the reference trace and is
         // intentionally dashed; the perturbed trace above remains solid.
         if ((i / 4) % 2 != 0)
             continue;
         glVertex3f(flr->x_[i], flr->y_[i], flr->z_[i]);
         glVertex3f(flr->x_[i + 1], flr->y_[i + 1], flr->z_[i + 1]);
+        }
+        glEnd();
     }
-    glEnd();
 
-    // Magnetopause.
-    glBindBuffer(GL_ARRAY_BUFFER, magnetopause->buffers_[0]);
+    if (showMagnetopause) {
+        // Magnetopause.
+        glBindBuffer(GL_ARRAY_BUFFER, magnetopause->buffers_[0]);
     glVertexPointer(3, GL_FLOAT, 0, nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, magnetopause->buffers_[2]);
     glColorPointer(4, GL_FLOAT, 0, nullptr);
@@ -234,10 +282,12 @@ void OpenGLWidget::paintGL()
     glEnableClientState(GL_COLOR_ARRAY);
     glDrawArrays(GL_QUADS, 0, magnetopause->nVertex_ / 3);
     glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+    }
 
-    // Filled cut planes.
-    glBindBuffer(GL_ARRAY_BUFFER, cutout->buffers_[0]);
+    if (showCutout) {
+        // Filled cut planes.
+        glBindBuffer(GL_ARRAY_BUFFER, cutout->buffers_[0]);
     glVertexPointer(3, GL_FLOAT, 0, nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, cutout->buffers_[2]);
     glColorPointer(4, GL_FLOAT, 0, nullptr);
@@ -245,20 +295,22 @@ void OpenGLWidget::paintGL()
     glEnableClientState(GL_COLOR_ARRAY);
     glDrawArrays(GL_TRIANGLES, 0, cutout->nVertex_ / 3);
     glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+    }
 
-    // Mirrored solar-wind streamlines from the original renderer.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glLineWidth(3.0f);
-    glBegin(GL_LINES);
-    for (int i = 0; i < streamline->n_ - 1; ++i) {
+    if (showStreamlines) {
+        // Mirrored solar-wind streamlines from the original renderer.
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glLineWidth(3.0f);
+        glBegin(GL_LINES);
+        for (int i = 0; i < streamline->n_ - 1; ++i) {
         glVertex3f(streamline->x_[i], streamline->y_[i], 0.0f);
         glVertex3f(streamline->x_[i + 1], streamline->y_[i + 1], 0.0f);
         glVertex3f(streamline->x_[i], -streamline->y_[i], 0.0f);
         glVertex3f(streamline->x_[i + 1], -streamline->y_[i + 1], 0.0f);
-    }
-    glEnd();
+        }
+        glEnd();
 
     // Arrowheads showing the anti-sunward flow direction on both streamlines.
     const float arrowRadius = 0.05f;
@@ -274,14 +326,41 @@ void OpenGLWidget::paintGL()
             glVertex3f(2.4f, side * 0.5f, 0.0f);
         }
     }
-    glEnd();
+        glEnd();
 
-    // Magnetosonic wave fronts just inside the magnetopause.
-    glLineWidth(2.0f);
-    glBegin(GL_LINES);
-    const float waveRadii[] = {1.18f, 1.30f};
-    for (float waveRadius : waveRadii) {
-        for (int i = 0; i < 80; ++i) {
+        // A second pair follows the bend in each streamline.
+        const float arrowAngle = 135.0f * M_PI / 180.0f;
+        const float arrowHalfLength = 0.05f;
+        glBegin(GL_TRIANGLES);
+        for (int side = -1; side <= 1; side += 2) {
+            for (int i = 0; i < 72; ++i) {
+                const float a0 = M_PI * (i * 5.0f) / 180.0f;
+                const float a1 = M_PI * ((i + 1) * 5.0f) / 180.0f;
+                const float localX[] = {-arrowHalfLength, -arrowHalfLength,
+                                        arrowHalfLength};
+                const float localY[] = {arrowRadius * cosf(a0),
+                                        arrowRadius * cosf(a1), 0.0f};
+                const float localZ[] = {arrowRadius * sinf(a0),
+                                        arrowRadius * sinf(a1), 0.0f};
+                for (int vertex = 0; vertex < 3; ++vertex) {
+                    const float x = localX[vertex] * cosf(arrowAngle)
+                                    - localY[vertex] * sinf(arrowAngle);
+                    const float y = localX[vertex] * sinf(arrowAngle)
+                                    + localY[vertex] * cosf(arrowAngle);
+                    glVertex3f(1.008f + x, side * (1.895f + y), localZ[vertex]);
+                }
+            }
+        }
+        glEnd();
+    }
+
+    if (showWaves) {
+        // Magnetosonic wave fronts just inside the magnetopause.
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+        const float waveRadii[] = {1.18f, 1.30f};
+        for (float waveRadius : waveRadii) {
+            for (int i = 0; i < 80; ++i) {
             const float mlt = i * 0.1f + 13.0f;
             const float theta0 = (mlt - 12.0f) * M_PI / 12.0f;
             const float theta1 = (mlt + 0.1f - 12.0f) * M_PI / 12.0f;
@@ -299,13 +378,14 @@ void OpenGLWidget::paintGL()
             wiggleCart(waveRadius, x1, y1, z1, 0.2f, &dx, &dy, &dz);
             glVertex3f(x0, y0, z0);
             glVertex3f(x1 + dx, y1 + dy, z1 + dz);
+            }
         }
-    }
-    glEnd();
+        glEnd();
 
-    float waveArrowColour[] = {1.0f, 0.25f, 0.0f, 1.0f};
-    flatArrow(0.949f, 0.949f, 213.0f, 0.3f, 0.15f, waveArrowColour);
-    flatArrow(0.0f, 1.754f, 243.0f, 0.3f, 0.15f, waveArrowColour);
+        float waveArrowColour[] = {1.0f, 0.25f, 0.0f, 1.0f};
+        flatArrow(0.949f, 0.949f, 213.0f, 0.3f, 0.15f, waveArrowColour);
+        flatArrow(0.0f, 1.754f, 243.0f, 0.3f, 0.15f, waveArrowColour);
+    }
     glEnable(GL_LIGHTING);
 }
 

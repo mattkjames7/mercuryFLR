@@ -29,6 +29,17 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         void observerZoomIn();
         void observerZoomOut();
         void resetObserver();
+        void saveScreenshot();
+        void setShowMagnetopause(bool visible);
+        void setShowCutout(bool visible);
+        void setShowFieldLines(bool visible);
+        void setShowOcb(bool visible);
+        void setShowFlr(bool visible);
+        void setShowStreamlines(bool visible);
+        void setShowWaves(bool visible);
+
+    signals:
+        void statusMessage(const QString &message);
 
     protected:
         void initializeGL() override; 
@@ -45,6 +56,13 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         float eyeLatitude;
         float eyeMlt;
         float eyeDistance;
+        bool showMagnetopause;
+        bool showCutout;
+        bool showFieldLines;
+        bool showOcb;
+        bool showFlr;
+        bool showStreamlines;
+        bool showWaves;
 };
 
 #endif
